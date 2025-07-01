@@ -1,0 +1,12 @@
+{
+  "extends": ["@fusebox/tsconfig/tsconfig.base.json"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@api/*": ["src/*"]
+    },
+    "composite": true,
+    "noEmit": false
+  },
+  "include": ["src/**/*"]
+}

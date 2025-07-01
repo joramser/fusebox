@@ -1,0 +1,13 @@
+{
+  "name": "@fusebox/tsconfig",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Package to share tsconfig configurations in the workspace",
+  "author": "Jorge Ramírez Serrato",
+  "type": "module",
+  "files": [
+    "./tsconfig.base.json",
+    "./tsconfig.react.json",
+    "./tsconfig.dom.json"
+  ]
+}

@@ -1,0 +1,11 @@
+[
+  {
+    "name": "backend",
+    "cwd": "/Users/User/Project/backend",
+    "command": "npm",
+    "args": "run dev",
+    "env": {
+      "NODE_ENV": "development"
+    }
+  }
+]
