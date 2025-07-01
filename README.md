@@ -2,9 +2,7 @@
   <code>Fusebox</code>
 </h1>
 
-https://github.com/user-attachments/assets/3d09301c-8378-4525-984b-66f71313a676
-
-Personal tool for running and managing executing proecesses. Useful for local development environments.
+Personal tool for running and managing local processes. Useful for local development environments.
 
 ## Features
 
