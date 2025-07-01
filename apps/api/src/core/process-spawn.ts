@@ -48,6 +48,10 @@ export class ProcessSpawn extends EventEmitter<{
   }
 
   async start() {
+    if (this.spawn) {
+      this.removeAllListeners();
+    }
+
     this.spawn = spawn(
       this.processConfiguration.command,
       this.processConfiguration.args.split(" "),
@@ -69,6 +73,7 @@ export class ProcessSpawn extends EventEmitter<{
           processName: this.name,
           status: this.status,
           pid: this.pid,
+          output: this.output,
         },
       });
     });
@@ -137,8 +142,6 @@ export class ProcessSpawn extends EventEmitter<{
           status: this.status,
         },
       });
-
-      this.removeAllListeners();
     });
 
     this.spawn.on("error", (error) => {

@@ -27,7 +27,13 @@ class ProcessesOrchestrator {
   }
 
   get(name: string) {
-    return this.processes.get(name);
+    const process = this.processes.get(name);
+
+    if (!process) {
+      throw new NoProcessFoundError(`Process ${name} not found`);
+    }
+
+    return process;
   }
 
   getAll() {
@@ -35,11 +41,7 @@ class ProcessesOrchestrator {
   }
 
   start(name: string) {
-    const process = this.processes.get(name);
-
-    if (!process) {
-      throw new NoProcessFoundError(`Process ${name} not found`);
-    }
+    const process = this.get(name);
 
     if (process.spawn.status === "killed" || process.spawn.status === "exited") {
       process.spawn = new ProcessSpawn(process);
@@ -55,11 +57,7 @@ class ProcessesOrchestrator {
   }
 
   stop(name: string) {
-    const process = this.processes.get(name);
-
-    if (!process) {
-      throw new NoProcessFoundError(`Process ${name} not found`);
-    }
+    const process = this.get(name);
 
     process.spawn.stop();
 

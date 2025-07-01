@@ -1,8 +1,8 @@
-import { Hono } from "hono";
+import { processesOrchestrator } from "@api/core/processes-orchestrator";
 
 import { processWebSocketListenerManager } from "@api/socket/process-websocket-manager";
-import { processesOrchestrator } from "@api/core/processes-orchestrator";
 import { socketManager } from "@api/socket/socket-manager";
+import { Hono } from "hono";
 
 const debug = new Hono();
 
