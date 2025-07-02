@@ -1,6 +1,8 @@
 import type { ProcessOutputSchema } from "@fusebox/api/schemas/process.schema";
+import { Button } from "@web/components/ui/button";
 import { AnsiUp } from "ansi_up";
-import { useEffect, useRef } from "react";
+import { CheckIcon, CopyIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
 
@@ -24,13 +26,41 @@ export const StreamDisplay = ({ output }: StreamDisplayProps) => {
   return (
     <div ref={containerRef} className="bg-secondary p-2 border rounded-md h-full overflow-auto">
       {output.map((line) => (
-        <div className="flex gap-2 text-sm" key={line.number}>
-          <span className="shrink-0 text-right w-8 text-gray-400 mr-4 tabular-nums">
-            {line.number}
-          </span>
-          <p className="font-mono whitespace-pre">{renderLine(line.line)}</p>
-        </div>
+        <StreamDisplayLine key={line.number} line={line} />
       ))}
+    </div>
+  );
+};
+
+const StreamDisplayLine = ({ line }: { line: ProcessOutputSchema }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  };
+
+  return (
+    <div className="flex gap-6 text-sm" key={line.number}>
+      <div className="group shrink-0 w-8 text-gray-400">
+        <div className="flex justify-end items-center relative">
+          <div className="tabular-nums group-hover:opacity-0 transition-opacity duration-200">
+            {line.number}
+          </div>
+          <div className="flex gap-1 opacity-0 absolute bg-secondary group-hover:opacity-100 transition-opacity duration-200">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-4"
+              onClick={() => handleCopy(line.line)}
+            >
+              {copied ? <CheckIcon /> : <CopyIcon />}
+            </Button>
+          </div>
+        </div>
+      </div>
+      <p className="font-mono whitespace-pre">{renderLine(line.line)}</p>
     </div>
   );
 };
