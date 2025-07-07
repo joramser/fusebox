@@ -93,12 +93,12 @@ export const ProcessDashboard = () => {
         </div>
         <div className="flex flex-col gap-2 h-full">
           <div className="flex flex-col gap-2 flex-1 h-full overflow-y-auto">
-            {!processes.length && (
+            {processes.size === 0 && (
               <p className="text-gray-500">
                 No processes available. Create a process in processes file.
               </p>
             )}
-            {processes.map((process) => (
+            {Array.from(processes.values()).map((process) => (
               <ProcessTab
                 key={process.name}
                 process={process}

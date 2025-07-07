@@ -6,7 +6,7 @@ import { useStore } from "@web/store";
 
 export const Route = createFileRoute("/processes")({
   loader: async ({ params }: { params: { processName?: string } }) => {
-    if (useStore.getState().processes.length > 0) {
+    if (useStore.getState().processes.size > 0) {
       return;
     }
 
