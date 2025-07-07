@@ -60,7 +60,12 @@ const StreamDisplayLine = ({ line }: { line: ProcessOutputSchema }) => {
           </div>
         </div>
       </div>
-      <p className="font-mono whitespace-pre">{renderLine(line.line)}</p>
+      <p
+        className="font-mono whitespace-pre"
+        // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: data comes validated from backend
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: data comes validated from backend
+        dangerouslySetInnerHTML={{ __html: renderLine(line.line) }}
+      />
     </div>
   );
 };
@@ -68,20 +73,12 @@ const StreamDisplayLine = ({ line }: { line: ProcessOutputSchema }) => {
 const renderLine = (text: string) => {
   const parts = text.split(URL_REGEX);
 
-  return parts.map((part) => {
-    if (part.match(URL_REGEX)) {
-      return (
-        <a
-          key={part}
-          href={part}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          {part}
-        </a>
-      );
-    }
-    return ansiUp.ansi_to_html(part);
-  });
+  return parts
+    .map((part) => {
+      if (part.match(URL_REGEX)) {
+        return `<a href="${part}" target="_blank" rel="noopener noreferrer" class="hover:underline">${part}</a>`;
+      }
+      return ansiUp.ansi_to_html(part);
+    })
+    .join("");
 };
