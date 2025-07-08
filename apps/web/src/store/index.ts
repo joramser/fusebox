@@ -1,5 +1,5 @@
 import type { LineCreatedEvent, ProcessUpdatedEvent } from "@fusebox/api/events";
-import type { ProcessSchema } from "@fusebox/api/schemas/process.schema";
+import type { ProcessOutputSchema, ProcessSchema } from "@fusebox/api/schemas/process.schema";
 import { enableMapSet } from "immer";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
@@ -8,6 +8,7 @@ enableMapSet();
 
 export interface StoreState {
   processes: Map<string, ProcessSchema>;
+  outputs: Map<string, ProcessOutputSchema[]>;
   activeProcessKey: string | undefined;
   actions: {
     setProcesses: (processes: ProcessSchema[]) => void;
@@ -25,7 +26,8 @@ export const useStore = create<StoreState>()(
     actions: {
       setProcesses: (processes) =>
         set((state) => {
-          state.processes = new Map(processes.map((p) => [p.name, p]));
+          state.processes = new Map(processes.map((p) => [p.name, { ...p, output: [] }]));
+          state.outputs = new Map(processes.map((p) => [p.name, p.spawn.output]));
           state.activeProcessKey = processes[0]?.name;
         }),
       setActiveProcess: (name: string) =>
@@ -35,20 +37,26 @@ export const useStore = create<StoreState>()(
       updateProcessStatus: (args) =>
         set((state) => {
           const process = state.processes.get(args.processName);
+          const output = state.outputs.get(args.processName);
 
           if (!process) return;
 
           process.spawn.status = args.status ?? process.spawn.status;
           process.spawn.pid = args.pid ?? process.spawn.pid;
-          process.spawn.output = args.output ?? process.spawn.output;
+
+          if (!output) return;
+
+          if (args.output?.length === 0) {
+            output.length = 0;
+          }
         }),
       createLine: (args) =>
         set((state) => {
-          const process = state.processes.get(args.processName);
+          const output = state.outputs.get(args.processName);
 
-          if (!process) return;
+          if (!output) return;
 
-          process.spawn.output.push({
+          output.push({
             number: args.number,
             line: args.line,
           });
@@ -61,5 +69,8 @@ export const useProcesses = () => useStore((state) => state.processes);
 
 export const useActiveProcess = () =>
   useStore((state) => state.processes.get(state.activeProcessKey ?? ""));
+
+export const useActiveProcessOutput = () =>
+  useStore((state) => state.outputs.get(state.activeProcessKey ?? "") ?? []);
 
 export const useStoreActions = () => useStore((state) => state.actions);

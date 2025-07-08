@@ -1,7 +1,6 @@
 import type { ProcessSchema } from "@fusebox/api/schemas/process.schema";
-import { useRouter } from "@tanstack/react-router";
+import { Outlet, useRouter } from "@tanstack/react-router";
 import { ProcessTab } from "@web/components/process-tab";
-import { StreamDisplay } from "@web/components/stream-display";
 import { StreamOptionsMenu } from "@web/components/stream-options-menu";
 import { Button } from "@web/components/ui/button";
 
@@ -122,7 +121,7 @@ export const ProcessDashboard = () => {
             });
           }}
         />
-        <StreamDisplay output={activeProcess?.spawn.output ?? []} />
+        <Outlet />
       </div>
     </main>
   );

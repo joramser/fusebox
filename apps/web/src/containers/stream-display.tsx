@@ -1,5 +1,6 @@
 import type { ProcessOutputSchema } from "@fusebox/api/schemas/process.schema";
 import { Button } from "@web/components/ui/button";
+import { useActiveProcessOutput } from "@web/store";
 import { AnsiUp } from "ansi_up";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -13,7 +14,9 @@ export type StreamDisplayProps = {
   output: ProcessOutputSchema[];
 };
 
-export const StreamDisplay = ({ output }: StreamDisplayProps) => {
+export const StreamDisplay = () => {
+  const activeProcessOutput = useActiveProcessOutput();
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: we need to run it on every output change
@@ -21,11 +24,11 @@ export const StreamDisplay = ({ output }: StreamDisplayProps) => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [output]);
+  }, [activeProcessOutput]);
 
   return (
     <div ref={containerRef} className="bg-secondary p-2 border rounded-md h-full overflow-auto">
-      {output.map((line) => (
+      {activeProcessOutput.map((line) => (
         <StreamDisplayLine key={line.number} line={line} />
       ))}
     </div>
