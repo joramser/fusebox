@@ -3,6 +3,10 @@ import { createContext, useContext, useEffect, useRef } from "react";
 
 export type WebSocketSubscribeCallback = (event: DownstreamEvent) => void;
 
+export type WebsocketProviderProps = {
+  children: React.ReactNode;
+};
+
 export const WebSocketContext = createContext<{
   subscribe: (callback: WebSocketSubscribeCallback) => void;
   unsubscribe: (callback: WebSocketSubscribeCallback) => void;
@@ -10,10 +14,6 @@ export const WebSocketContext = createContext<{
   subscribe: () => {},
   unsubscribe: () => {},
 });
-
-export type WebsocketProviderProps = {
-  children: React.ReactNode;
-};
 
 export const WebSocketProvider = ({ children }: WebsocketProviderProps) => {
   const socketRef = useRef<WebSocket | null>(null);

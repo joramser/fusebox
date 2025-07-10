@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 
 import "@web/index.css";
+import { ThemeProvider } from "./context/theme.context";
 
 // Set up a Router instance
 const router = createRouter({
@@ -24,9 +25,11 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
 
   const app = (
-    <WebSocketProvider>
-      <RouterProvider router={router} />
-    </WebSocketProvider>
+    <ThemeProvider>
+      <WebSocketProvider>
+        <RouterProvider router={router} />
+      </WebSocketProvider>
+    </ThemeProvider>
   );
 
   root.render(app);

@@ -2,6 +2,7 @@ import type { ProcessSchema } from "@fusebox/api/schemas/process.schema";
 import { Outlet, useRouter } from "@tanstack/react-router";
 import { ProcessTab } from "@web/components/process-tab";
 import { StreamOptionsMenu } from "@web/components/stream-options-menu";
+import { ThemeToggle } from "@web/components/theme-toggle";
 import { Button } from "@web/components/ui/button";
 
 import {
@@ -107,6 +108,9 @@ export const ProcessDashboard = () => {
               />
             ))}
           </div>
+        </div>
+        <div className="flex gap-2 items-center justify-end border-t pt-2">
+          <ThemeToggle />
         </div>
       </div>
       <div className="flex flex-col flex-1 gap-2 min-w-0">
