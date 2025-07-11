@@ -58,6 +58,10 @@ export class ProcessSpawn extends EventEmitter<{
       {
         cwd: this.processConfiguration.cwd,
         detached: false,
+        env: {
+          ...process.env,
+          ...this.processConfiguration.env,
+        },
       },
     );
 
