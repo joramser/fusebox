@@ -14,6 +14,7 @@
     "@fusebox/tsconfig": "workspace:^",
     "@tanstack/react-router": "^1.121.2",
     "@tanstack/react-router-devtools": "^1.121.5",
+    "@tanstack/react-virtual": "^3.13.12",
     "@tanstack/router-plugin": "^1.121.4",
     "ansi_up": "^6.0.6",
     "class-variance-authority": "^0.7.1",

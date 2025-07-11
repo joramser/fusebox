@@ -1,4 +1,5 @@
 import type { ProcessOutputSchema } from "@fusebox/api/schemas/process.schema";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Button } from "@web/components/ui/button";
 import { useActiveProcessOutput } from "@web/store";
 import { AnsiUp } from "ansi_up";
@@ -19,18 +20,40 @@ export const StreamDisplay = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we need to run it on every output change
+  const virtualizer = useVirtualizer({
+    count: activeProcessOutput.length,
+    getScrollElement: () => containerRef.current,
+    estimateSize: () => 18,
+    overscan: 5,
+    paddingEnd: 10,
+  });
+
   useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }
+    console.log(activeProcessOutput.length);
+    virtualizer.scrollToIndex(activeProcessOutput.length - 1, {
+      behavior: "auto",
+    });
   }, [activeProcessOutput]);
 
+  const items = virtualizer.getVirtualItems();
+
   return (
-    <div ref={containerRef} className="bg-secondary p-2 border rounded-md h-full overflow-auto">
-      {activeProcessOutput.map((line) => (
-        <StreamDisplayLine key={line.number} line={line} />
-      ))}
+    <div
+      ref={containerRef}
+      className="relative bg-secondary p-2 border rounded-md h-full overflow-auto"
+    >
+      <div
+        className="absolute inset-2 w-full"
+        style={{
+          transform: `translateY(${items[0]?.start ?? 0}px)`,
+        }}
+      >
+        {items.map((virtualRow) => {
+          const line = activeProcessOutput[virtualRow.index];
+          if (!line) return null;
+          return <StreamDisplayLine key={line.number} line={line} />;
+        })}
+      </div>
     </div>
   );
 };
