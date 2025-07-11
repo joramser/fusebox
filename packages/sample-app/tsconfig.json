@@ -1,0 +1,9 @@
+{
+  "extends": ["@fusebox/tsconfig/tsconfig.base.json"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "composite": true,
+    "noEmit": false
+  },
+  "include": ["**/*"]
+}

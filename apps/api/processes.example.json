@@ -1,11 +1,11 @@
 [
   {
-    "name": "backend",
-    "cwd": "/Users/User/Project/backend",
-    "command": "npm",
-    "args": "run dev",
+    "name": "sample-app",
+    "cwd": "../../packages/sample-app",
+    "command": "bun",
+    "args": "index.ts",
     "env": {
-      "NODE_ENV": "development"
+      "LOG_DELAY": "1000"
     }
   }
 ]
