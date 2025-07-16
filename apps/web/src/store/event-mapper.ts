@@ -7,6 +7,9 @@ import type { StoreState } from ".";
  */
 export const downstreamEventMapper = (store: StoreState["actions"]) => (event: DownstreamEvent) => {
   switch (event.name) {
+    case "v1.app-loaded":
+      store.setProcesses(event.params.processes);
+      break;
     case "v1.process-updated":
       store.updateProcessStatus(event.params);
       break;

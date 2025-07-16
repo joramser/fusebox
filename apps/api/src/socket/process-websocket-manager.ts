@@ -1,5 +1,6 @@
 import type { ProcessSpawn, ProcessSpawnSendEvent } from "@api/core/process-spawn";
 import { processesOrchestrator } from "@api/core/processes-orchestrator";
+import type { DownstreamEvent } from "@api/events";
 import { socketManager } from "@api/socket/socket-manager";
 import type { ServerWebSocket } from "bun";
 
@@ -20,6 +21,13 @@ class ProcessWebSocketListenerManager {
       .filter((process) => process.spawn.status === "running")) {
       this.registerSpawnListener(process.spawn, socket);
     }
+
+    this.sendEvent(socket, {
+      name: "v1.app-loaded",
+      params: {
+        processes: processesOrchestrator.serialize(),
+      },
+    });
   }
 
   registerForAllWebSockets(spawn: ProcessSpawn) {
@@ -35,8 +43,8 @@ class ProcessWebSocketListenerManager {
   }
 
   private registerSpawnListener(spawn: ProcessSpawn, socket: ServerWebSocket) {
-    const listener = (data: ProcessSpawnSendEvent) => {
-      socket.send(JSON.stringify(data));
+    const listener = (event: ProcessSpawnSendEvent) => {
+      this.sendEvent(socket, event);
     };
 
     spawn.on("send", listener);
@@ -54,6 +62,12 @@ class ProcessWebSocketListenerManager {
     spawn.removeListener("send", listener);
 
     this.spawnListeners.delete(socket);
+  }
+
+  private sendEvent(socket: ServerWebSocket, event: DownstreamEvent) {
+    if (socket.readyState === 1) {
+      socket.send(JSON.stringify(event));
+    }
   }
 }
 

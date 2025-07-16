@@ -1,17 +1,9 @@
-import {
-  clearProcessOutput,
-  getProcesses,
-  startProcess,
-  stopProcess,
-} from "@api/services/process.service";
+import { clearProcessOutput, startProcess, stopProcess } from "@api/services/process.service";
 
 import { Hono } from "hono";
 
 // TODO: Remove when upstream events are implemented
 const processes = new Hono()
-  .get("/", (ctx) => {
-    return ctx.json(getProcesses());
-  })
   .post("/:name/start", (ctx) => {
     const name = ctx.req.param("name");
 

@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { ProcessDashboard } from "@web/containers/process-dashboard";
-
-import { apiClient } from "@web/lib/rpc-client";
+import type { StoreState } from "@web/store";
 import { useStore } from "@web/store";
 
 export const Route = createFileRoute("/processes")({
@@ -10,16 +9,20 @@ export const Route = createFileRoute("/processes")({
       return;
     }
 
-    const response = await apiClient.processes.$get({});
-    const processes = await response.json();
+    const processes = await new Promise<StoreState["processes"]>((resolve) => {
+      useStore.subscribe(
+        (state) => state.processes,
+        (processes) => resolve(processes),
+      );
+    });
 
-    useStore.getState().actions.setProcesses(processes);
+    const firstProcess = processes.values().next().value;
 
-    if (processes.length === 0 || !processes[0]) {
+    if (processes.size === 0 || !firstProcess) {
       return {};
     }
 
-    const processName = params.processName ?? processes[0]?.name;
+    const processName = params.processName ?? firstProcess.name;
 
     throw redirect({
       to: `/processes/$processName`,

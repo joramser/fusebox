@@ -2,6 +2,7 @@ import type { LineCreatedEvent, ProcessUpdatedEvent } from "@fusebox/api/events"
 import type { ProcessOutputSchema, ProcessSchema } from "@fusebox/api/schemas/process.schema";
 import { enableMapSet } from "immer";
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 enableMapSet();
@@ -19,50 +20,52 @@ export interface StoreState {
 }
 
 export const useStore = create<StoreState>()(
-  immer((set) => ({
-    processes: new Map(),
-    outputs: new Map(),
-    activeProcessKey: undefined,
-    actions: {
-      setProcesses: (processes) =>
-        set((state) => {
-          state.processes = new Map(processes.map((p) => [p.name, { ...p, output: [] }]));
-          state.outputs = new Map(processes.map((p) => [p.name, p.spawn.output]));
-          state.activeProcessKey = processes[0]?.name;
-        }),
-      setActiveProcess: (name: string) =>
-        set((state) => {
-          state.activeProcessKey = name;
-        }),
-      updateProcessStatus: (args) =>
-        set((state) => {
-          const process = state.processes.get(args.processName);
-          const output = state.outputs.get(args.processName);
+  immer(
+    subscribeWithSelector((set) => ({
+      processes: new Map(),
+      outputs: new Map(),
+      activeProcessKey: undefined,
+      actions: {
+        setProcesses: (processes) =>
+          set((state) => {
+            state.processes = new Map(processes.map((p) => [p.name, { ...p, output: [] }]));
+            state.outputs = new Map(processes.map((p) => [p.name, p.spawn.output]));
+            state.activeProcessKey = processes[0]?.name;
+          }),
+        setActiveProcess: (name: string) =>
+          set((state) => {
+            state.activeProcessKey = name;
+          }),
+        updateProcessStatus: (args) =>
+          set((state) => {
+            const process = state.processes.get(args.processName);
+            const output = state.outputs.get(args.processName);
 
-          if (!process) return;
+            if (!process) return;
 
-          process.spawn.status = args.status ?? process.spawn.status;
-          process.spawn.pid = args.pid ?? process.spawn.pid;
+            process.spawn.status = args.status ?? process.spawn.status;
+            process.spawn.pid = args.pid ?? process.spawn.pid;
 
-          if (!output) return;
+            if (!output) return;
 
-          if (args.output?.length === 0) {
-            output.length = 0;
-          }
-        }),
-      createLine: (args) =>
-        set((state) => {
-          const output = state.outputs.get(args.processName);
+            if (args.output?.length === 0) {
+              output.length = 0;
+            }
+          }),
+        createLine: (args) =>
+          set((state) => {
+            const output = state.outputs.get(args.processName);
 
-          if (!output) return;
+            if (!output) return;
 
-          output.push({
-            number: args.number,
-            line: args.line,
-          });
-        }),
-    },
-  })),
+            output.push({
+              number: args.number,
+              line: args.line,
+            });
+          }),
+      },
+    })),
+  ),
 );
 
 export const useProcesses = () => useStore((state) => state.processes);

@@ -1,10 +1,13 @@
 import { createRouter, RouterProvider } from "@tanstack/react-router";
-import { WebSocketProvider } from "@web/context/websocket.context";
+import { useWebSocket, WebSocketProvider } from "@web/context/websocket.context";
 import ReactDOM from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 
 import "@web/index.css";
+import { type ReactNode, useEffect } from "react";
 import { ThemeProvider } from "./context/theme.context";
+import { useStoreActions } from "./store";
+import { downstreamEventMapper } from "./store/event-mapper";
 
 // Set up a Router instance
 const router = createRouter({
@@ -27,10 +30,25 @@ if (rootElement && !rootElement.innerHTML) {
   const app = (
     <ThemeProvider>
       <WebSocketProvider>
-        <RouterProvider router={router} />
+        <EventsSubscriberProvider>
+          <RouterProvider router={router} />
+        </EventsSubscriberProvider>
       </WebSocketProvider>
     </ThemeProvider>
   );
 
   root.render(app);
+}
+
+function EventsSubscriberProvider({ children }: { children: ReactNode }) {
+  const { subscribe } = useWebSocket();
+  const actions = useStoreActions();
+
+  useEffect(() => {
+    subscribe((message) => {
+      downstreamEventMapper(actions)(message);
+    });
+  }, [actions, subscribe]);
+
+  return children;
 }

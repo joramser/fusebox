@@ -37,10 +37,6 @@ export const stopProcess = (name: string) => {
   }
 };
 
-export const getProcesses = () => {
-  return processesOrchestrator.serialize();
-};
-
 export const clearProcessOutput = (name: string) => {
   const process = processesOrchestrator.get(name);
   process?.spawn.clearOutput();

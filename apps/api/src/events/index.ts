@@ -1,5 +1,16 @@
-import { processOutputSchema, processStatusSchema } from "@api/schemas/process.schema";
+import {
+  processOutputSchema,
+  processSchema,
+  processStatusSchema,
+} from "@api/schemas/process.schema";
 import { z } from "zod";
+
+export const AppLoadedEvent = z.object({
+  name: z.literal("v1.app-loaded"),
+  params: z.object({
+    processes: z.array(processSchema),
+  }),
+});
 
 export const processUpdatedSchema = z.object({
   name: z.literal("v1.process-updated"),
@@ -26,8 +37,13 @@ export const processErrorEventSchema = z.object({
   }),
 });
 
+export type AppLoadedEvent = z.infer<typeof AppLoadedEvent>;
 export type ProcessUpdatedEvent = z.infer<typeof processUpdatedSchema>;
 export type ProcessErrorEvent = z.infer<typeof processErrorEventSchema>;
 export type LineCreatedEvent = z.infer<typeof lineCreatedEventSchema>;
 
-export type DownstreamEvent = ProcessUpdatedEvent | LineCreatedEvent | ProcessErrorEvent;
+export type DownstreamEvent =
+  | AppLoadedEvent
+  | ProcessUpdatedEvent
+  | LineCreatedEvent
+  | ProcessErrorEvent;
