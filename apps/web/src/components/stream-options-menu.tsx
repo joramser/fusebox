@@ -12,7 +12,7 @@ import { Badge } from "./ui/badge";
 
 export type StreamOptionsMenuProps = {
   process: ProcessSchema | undefined;
-  onClear: (() => void) | undefined;
+  onClear: (process: ProcessSchema) => void;
 };
 
 export const StreamOptionsMenu = ({ process, onClear }: StreamOptionsMenuProps) => {
@@ -62,7 +62,11 @@ export const StreamOptionsMenu = ({ process, onClear }: StreamOptionsMenuProps) 
                 size="sm"
                 className="px-2"
                 variant="outline"
-                onClick={onClear}
+                onClick={() => {
+                  if (process) {
+                    onClear(process);
+                  }
+                }}
                 disabled={!process}
               >
                 <EraserIcon strokeWidth="1.5" />

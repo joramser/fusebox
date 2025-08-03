@@ -7,18 +7,32 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@web/components/ui/tooltip";
-import { apiClient } from "@web/lib/rpc-client";
+import type { Commands } from "@web/lib/rpc-client";
 import { cn } from "@web/lib/utils";
 import { CodeIcon, FolderCodeIcon } from "lucide-react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export type ProcessTabProps = {
+  index: number;
   process: ProcessSchema;
   isSelected: boolean;
   onSelect: (process: ProcessSchema) => void;
-  onToggle: (app: ProcessSchema) => void;
+  onToggle: (process: ProcessSchema) => void;
+  onCommand: (command: Commands, process: ProcessSchema) => void;
 };
 
-export const ProcessTab = ({ process, isSelected, onSelect, onToggle }: ProcessTabProps) => {
+export const ProcessTab = ({
+  index,
+  process,
+  isSelected,
+  onSelect,
+  onToggle,
+  onCommand,
+}: ProcessTabProps) => {
+  useHotkeys(index.toString(), () => {
+    onSelect(process);
+  });
+
   return (
     <div
       role="menu"
@@ -58,11 +72,7 @@ export const ProcessTab = ({ process, isSelected, onSelect, onToggle }: ProcessT
                   variant="outline"
                   onClick={(e) => {
                     e.stopPropagation();
-                    apiClient.commands[":name"]["open-folder"].$post({
-                      param: {
-                        name: process.name,
-                      },
-                    });
+                    onCommand("open-folder", process);
                   }}
                 >
                   <FolderCodeIcon strokeWidth="1.5" />
@@ -78,12 +88,9 @@ export const ProcessTab = ({ process, isSelected, onSelect, onToggle }: ProcessT
                   className="px-2"
                   size="sm"
                   variant="outline"
-                  onClick={() => {
-                    apiClient.commands[":name"]["open-ide"].$post({
-                      param: {
-                        name: process.name,
-                      },
-                    });
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onCommand("open-ide", process);
                   }}
                 >
                   <CodeIcon strokeWidth="1.5" />

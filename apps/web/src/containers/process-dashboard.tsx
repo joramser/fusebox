@@ -4,7 +4,6 @@ import { ProcessTab } from "@web/components/process-tab";
 import { StreamOptionsMenu } from "@web/components/stream-options-menu";
 import { ThemeToggle } from "@web/components/theme-toggle";
 import { Button } from "@web/components/ui/button";
-
 import {
   Dialog,
   DialogContent,
@@ -19,9 +18,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@web/components/ui/tooltip";
-import { apiClient } from "@web/lib/rpc-client";
+import { apiClient, type Commands } from "@web/lib/rpc-client";
 import { useActiveProcess, useProcesses } from "@web/store";
 import { PlusIcon, SlidersHorizontalIcon } from "lucide-react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export type ProcessDashboardProps = {
   processes: ProcessSchema[];
@@ -59,6 +59,43 @@ export const ProcessDashboard = () => {
       });
     }
   };
+
+  const onClearProcess = (process: ProcessSchema) => {
+    apiClient.processes[":name"].clear.$post({
+      param: {
+        name: process.name,
+      },
+    });
+  };
+
+  const onProcessCommand = (command: Commands, process: ProcessSchema) => {
+    apiClient.commands[":name"][command].$post({
+      param: {
+        name: process.name,
+      },
+    });
+  };
+
+  useHotkeys("s", () => {
+    if (activeProcess) {
+      onToggleProcess(activeProcess);
+    }
+  });
+  useHotkeys("c", () => {
+    if (activeProcess) {
+      onClearProcess(activeProcess);
+    }
+  });
+  useHotkeys("o", () => {
+    if (activeProcess) {
+      onProcessCommand("open-ide", activeProcess);
+    }
+  });
+  useHotkeys("f", () => {
+    if (activeProcess) {
+      onProcessCommand("open-folder", activeProcess);
+    }
+  });
 
   return (
     <main className="min-h-screen max-h-screen max-w-screen flex flex-1 gap-4 p-4">
@@ -98,13 +135,15 @@ export const ProcessDashboard = () => {
                 No processes available. Create a process in processes file.
               </p>
             )}
-            {Array.from(processes.values()).map((process) => (
+            {Array.from(processes.values()).map((process, index) => (
               <ProcessTab
                 key={process.name}
+                index={index + 1}
                 process={process}
                 isSelected={process.name === activeProcess?.name}
                 onSelect={onSelectProcess}
                 onToggle={onToggleProcess}
+                onCommand={onProcessCommand}
               />
             ))}
           </div>
@@ -114,17 +153,7 @@ export const ProcessDashboard = () => {
         </div>
       </div>
       <div className="flex flex-col flex-1 gap-2 min-w-0">
-        <StreamOptionsMenu
-          process={activeProcess}
-          onClear={() => {
-            if (!activeProcess) return;
-            apiClient.processes[":name"].clear.$post({
-              param: {
-                name: activeProcess.name,
-              },
-            });
-          }}
-        />
+        <StreamOptionsMenu process={activeProcess} onClear={onClearProcess} />
         <Outlet />
       </div>
     </main>
