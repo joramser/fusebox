@@ -128,25 +128,23 @@ export const ProcessDashboard = () => {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="flex flex-col gap-2 h-full">
-          <div className="flex flex-col gap-2 flex-1 h-full overflow-y-auto">
-            {processes.size === 0 && (
-              <p className="text-gray-500">
-                No processes available. Create a process in processes file.
-              </p>
-            )}
-            {Array.from(processes.values()).map((process, index) => (
-              <ProcessTab
-                key={process.name}
-                index={index + 1}
-                process={process}
-                isSelected={process.name === activeProcess?.name}
-                onSelect={onSelectProcess}
-                onToggle={onToggleProcess}
-                onCommand={onProcessCommand}
-              />
-            ))}
-          </div>
+        <div className="flex flex-col gap-2 flex-1 h-full overflow-y-auto">
+          {processes.size === 0 && (
+            <p className="text-gray-500">
+              No processes available. Create a process in processes file.
+            </p>
+          )}
+          {Array.from(processes.values()).map((process, index) => (
+            <ProcessTab
+              key={process.name}
+              index={index + 1}
+              process={process}
+              isSelected={process.name === activeProcess?.name}
+              onSelect={onSelectProcess}
+              onToggle={onToggleProcess}
+              onCommand={onProcessCommand}
+            />
+          ))}
         </div>
         <div className="flex gap-2 items-center justify-end border-t pt-2">
           <ThemeToggle />
