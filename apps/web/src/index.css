@@ -118,6 +118,7 @@
 @layer base {
   html {
     font-size: 14px;
+    overscroll-behavior: none;
   }
 
   * {
