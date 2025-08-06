@@ -7,4 +7,11 @@ export const Route = createFileRoute("/processes/$processName")({
     useStore.getState().actions.setActiveProcess(params.processName);
   },
   component: StreamDisplay,
+  head: (context) => ({
+    meta: [
+      {
+        title: `${context.params.processName} - Fusebox`,
+      },
+    ],
+  }),
 });
