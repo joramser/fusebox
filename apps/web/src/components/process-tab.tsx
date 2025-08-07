@@ -7,9 +7,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@web/components/ui/tooltip";
+import { useIntersectionObserver } from "@web/hooks/use-intersection-observer";
 import type { Commands } from "@web/lib/rpc-client";
 import { cn } from "@web/lib/utils";
 import { CodeIcon, FolderCodeIcon } from "lucide-react";
+import { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 export type ProcessTabProps = {
@@ -29,12 +31,30 @@ export const ProcessTab = ({
   onToggle,
   onCommand,
 }: ProcessTabProps) => {
-  useHotkeys(index.toString(), () => {
-    onSelect(process);
-  });
+  const handleIntersection = useCallback(
+    (element: Element) => {
+      if (isSelected) {
+        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    },
+    [isSelected],
+  );
+
+  const ref = useIntersectionObserver<HTMLDivElement>(handleIntersection);
+
+  useHotkeys(
+    index.toString(),
+    () => {
+      onSelect(process);
+    },
+    {
+      enabled: index < 10,
+    },
+  );
 
   return (
     <div
+      ref={ref}
       role="menu"
       className={cn(
         "border transition-colors shadow-xs flex flex-col gap-4 py-2 px-2 rounded-md cursor-pointer",
