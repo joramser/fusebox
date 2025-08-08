@@ -19,7 +19,7 @@ import {
   TooltipTrigger,
 } from "@web/components/ui/tooltip";
 import { apiClient, type Commands } from "@web/lib/rpc-client";
-import { useActiveProcess, useProcesses } from "@web/store";
+import { useActiveProcess, useNextProcess, usePreviousProcess, useProcesses } from "@web/store";
 import { PlusIcon, SlidersHorizontalIcon } from "lucide-react";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -32,7 +32,10 @@ export const ProcessDashboard = () => {
   const router = useRouter();
 
   const processes = useProcesses();
+
   const activeProcess = useActiveProcess();
+  const nextProcess = useNextProcess();
+  const previousProcess = usePreviousProcess();
 
   const onSelectProcess = (process: ProcessSchema) => {
     router.navigate({
@@ -94,6 +97,16 @@ export const ProcessDashboard = () => {
   useHotkeys("f", () => {
     if (activeProcess) {
       onProcessCommand("open-folder", activeProcess);
+    }
+  });
+  useHotkeys("j", () => {
+    if (nextProcess) {
+      onSelectProcess(nextProcess);
+    }
+  });
+  useHotkeys("k", () => {
+    if (previousProcess) {
+      onSelectProcess(previousProcess);
     }
   });
 

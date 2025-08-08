@@ -73,6 +73,20 @@ export const useProcesses = () => useStore((state) => state.processes);
 export const useActiveProcess = () =>
   useStore((state) => state.processes.get(state.activeProcessKey ?? ""));
 
+export const useNextProcess = () =>
+  useStore((state) => {
+    const processes = Array.from(state.processes.values());
+    const activeIndex = processes.findIndex((p) => p.name === state.activeProcessKey);
+    return processes[(activeIndex + 1) % processes.length];
+  });
+
+export const usePreviousProcess = () =>
+  useStore((state) => {
+    const processes = Array.from(state.processes.values());
+    const activeIndex = processes.findIndex((p) => p.name === state.activeProcessKey);
+    return processes[(activeIndex - 1 + processes.length) % processes.length];
+  });
+
 export const useActiveProcessOutput = () =>
   useStore((state) => state.outputs.get(state.activeProcessKey ?? "") ?? []);
 
