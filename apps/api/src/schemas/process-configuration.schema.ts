@@ -5,7 +5,7 @@ export const processConfigurationSchema = z.object({
   cwd: z.string(),
   args: z.string(),
   command: z.string(),
-  env: z.record(z.string()).optional(),
+  env: z.record(z.string(), z.string()).optional(),
 });
 
 export const processesConfigurationSchema = z.array(processConfigurationSchema);
