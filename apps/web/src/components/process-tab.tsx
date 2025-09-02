@@ -72,9 +72,14 @@ export const ProcessTab = ({
       }}
     >
       <div className="flex items-center justify-between">
-        <div className="flex gap-2 items-center align-middle">
+        <div className="flex gap-2 items-center align-middle w-4/5">
           <StatusIndicator status={process.spawn.status} />
-          <h1 className="font-mono text-sm">{process.name}</h1>
+          <h1
+            className="font-mono text-sm text-nowrap overflow-hidden text-ellipsis"
+            title={process.name}
+          >
+            {process.name}
+          </h1>
         </div>
         <OnOffSwitch
           checked={process.spawn.status === "running"}
@@ -130,7 +135,7 @@ export const ProcessTab = ({
 const StatusIndicator = ({ status }: { status: ProcessSchema["spawn"]["status"] }) => {
   return (
     <div
-      className={cn("h-2 w-2 rounded-full bg-muted-foreground", {
+      className={cn("h-2 w-2 rounded-full bg-muted-foreground shrink-0", {
         "bg-green-500": status === "running",
         "bg-yellow-500": status === "exited",
       })}
