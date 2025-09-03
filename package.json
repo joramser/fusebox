@@ -16,10 +16,10 @@
   "author": "Jorge Ramírez Serrato",
   "license": "ISC",
   "devDependencies": {
-    "@biomejs/biome": "^2.1.4"
+    "@biomejs/biome": "^2.2.2"
   },
   "dependencies": {
-    "turbo": "^2.5.5"
+    "turbo": "^2.5.6"
   },
   "packageManager": "bun@1.2.13"
 }
