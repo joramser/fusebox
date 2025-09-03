@@ -22,14 +22,9 @@ export const StreamDisplay = () => {
   // biome-ignore lint/correctness/useExhaustiveDependencies: we need to run it on every output change
   useEffect(() => {
     if (containerRef.current) {
-      containerRef.current.focus();
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [activeProcessOutput]);
-
-  useEffect(() => {
-    containerRef.current?.focus();
-  }, []);
 
   return (
     <div ref={containerRef} className="bg-secondary p-2 border rounded-md h-full overflow-auto">

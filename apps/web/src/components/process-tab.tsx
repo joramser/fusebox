@@ -7,11 +7,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@web/components/ui/tooltip";
-import { useIntersectionObserver } from "@web/hooks/use-intersection-observer";
 import type { Commands } from "@web/lib/rpc-client";
 import { cn } from "@web/lib/utils";
 import { CodeIcon, FolderCodeIcon } from "lucide-react";
-import { useCallback } from "react";
+import { useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 export type ProcessTabProps = {
@@ -31,16 +30,7 @@ export const ProcessTab = ({
   onToggle,
   onCommand,
 }: ProcessTabProps) => {
-  const handleIntersection = useCallback(
-    (element: Element) => {
-      if (isSelected) {
-        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
-    },
-    [isSelected],
-  );
-
-  const ref = useIntersectionObserver<HTMLDivElement>(handleIntersection);
+  const itemRef = useRef<HTMLDivElement>(null);
 
   useHotkeys(
     index.toString(),
@@ -52,12 +42,18 @@ export const ProcessTab = ({
     },
   );
 
+  useEffect(() => {
+    if (isSelected) {
+      itemRef.current?.focus();
+    }
+  }, [isSelected]);
+
   return (
     <div
-      ref={ref}
+      ref={itemRef}
       role="menu"
       className={cn(
-        "border transition-colors shadow-xs flex flex-col gap-4 py-2 px-2 rounded-md cursor-pointer",
+        "border transition-colors shadow-xs flex flex-col gap-4 py-2 px-2 rounded-md cursor-pointer outline-0",
         {
           "shadow-md border-primary": isSelected,
         },
