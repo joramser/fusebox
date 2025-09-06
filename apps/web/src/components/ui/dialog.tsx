@@ -1,5 +1,5 @@
+import { XIcon } from "@phosphor-icons/react";
 import { cn } from "@web/lib/utils";
-import { XIcon } from "lucide-react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import type * as React from "react";
 

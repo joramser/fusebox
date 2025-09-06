@@ -1,5 +1,5 @@
+import { CaretRightIcon, CheckIcon, CircleIcon } from "@phosphor-icons/react";
 import { cn } from "@web/lib/utils";
-import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 import type * as React from "react";
 
@@ -185,7 +185,7 @@ function DropdownMenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ml-auto size-4" />
+      <CaretRightIcon className="ml-auto size-4" />
     </DropdownMenuPrimitive.SubTrigger>
   );
 }

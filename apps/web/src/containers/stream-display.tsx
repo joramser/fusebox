@@ -1,8 +1,8 @@
 import type { ProcessOutputSchema } from "@fusebox/api/schemas/process.schema";
+import { CheckIcon, CopyIcon } from "@phosphor-icons/react";
 import { Button } from "@web/components/ui/button";
 import { useActiveProcessOutput } from "@web/store";
 import { AnsiUp } from "ansi_up";
-import { CheckIcon, CopyIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;

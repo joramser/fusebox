@@ -5,13 +5,14 @@
   "private": true,
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "start": "vite preview"
   },
   "dependencies": {
     "@fusebox/api": "workspace:^",
     "@fusebox/tsconfig": "workspace:^",
+    "@phosphor-icons/react": "^2.1.10",
     "@tanstack/react-router": "^1.131.32",
     "@tanstack/react-router-devtools": "^1.131.32",
     "@tanstack/router-plugin": "^1.131.32",
@@ -19,7 +20,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "immer": "^10.1.3",
-    "lucide-react": "^0.542.0",
     "radix-ui": "^1.4.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

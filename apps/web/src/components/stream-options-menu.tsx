@@ -1,4 +1,5 @@
 import type { ProcessSchema } from "@fusebox/api/schemas/process.schema";
+import { CheckIcon, EraserIcon } from "@phosphor-icons/react";
 import { Button } from "@web/components/ui/button";
 import {
   Tooltip,
@@ -6,7 +7,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@web/components/ui/tooltip";
-import { CheckIcon, EraserIcon } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
 
