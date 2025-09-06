@@ -1,4 +1,5 @@
 import type { ProcessSchema } from "@fusebox/api/schemas/process.schema";
+import { PlusIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
 import { Outlet, useRouter } from "@tanstack/react-router";
 import { ProcessTab } from "@web/components/process-tab";
 import { StreamOptionsMenu } from "@web/components/stream-options-menu";
@@ -20,7 +21,6 @@ import {
 } from "@web/components/ui/tooltip";
 import { apiClient, type Commands } from "@web/lib/rpc-client";
 import { useActiveProcess, useNextProcess, usePreviousProcess, useProcesses } from "@web/store";
-import { PlusIcon, SlidersHorizontalIcon } from "lucide-react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 export type ProcessDashboardProps = {

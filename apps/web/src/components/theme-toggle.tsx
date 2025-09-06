@@ -1,6 +1,6 @@
+import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { Toggle } from "@web/components/ui/toggle";
 import { useTheme } from "@web/context/theme.context";
-import { MoonIcon, SunIcon } from "lucide-react";
 
 export const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();

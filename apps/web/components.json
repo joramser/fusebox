@@ -17,5 +17,5 @@
     "lib": "@web/lib",
     "hooks": "@web/hooks"
   },
-  "iconLibrary": "lucide"
+  "iconLibrary": "@phosphor-icons/react"
 }

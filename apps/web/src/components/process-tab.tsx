@@ -1,4 +1,5 @@
 import type { ProcessSchema } from "@fusebox/api/schemas/process.schema";
+import { CodeIcon, FolderIcon } from "@phosphor-icons/react";
 import { OnOffSwitch } from "@web/components/on-off-switch";
 import { Button } from "@web/components/ui/button";
 import {
@@ -9,7 +10,6 @@ import {
 } from "@web/components/ui/tooltip";
 import type { Commands } from "@web/lib/rpc-client";
 import { cn } from "@web/lib/utils";
-import { CodeIcon, FolderCodeIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -96,7 +96,7 @@ export const ProcessTab = ({
                     onCommand("open-folder", process);
                   }}
                 >
-                  <FolderCodeIcon strokeWidth="1.5" />
+                  <FolderIcon strokeWidth="1.5" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

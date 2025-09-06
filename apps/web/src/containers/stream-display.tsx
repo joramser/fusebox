@@ -1,8 +1,8 @@
 import type { ProcessOutputSchema } from "@fusebox/api/schemas/process.schema";
+import { CheckIcon, CopyIcon } from "@phosphor-icons/react";
 import { Button } from "@web/components/ui/button";
 import { useActiveProcessOutput } from "@web/store";
 import { AnsiUp } from "ansi_up";
-import { CheckIcon, CopyIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -48,7 +48,7 @@ const StreamDisplayLine = ({ line }: { line: ProcessOutputSchema }) => {
     <div className="flex gap-6 text-sm" key={line.number}>
       <div className="group shrink-0 w-8 text-gray-400">
         <div className="flex justify-end items-center relative">
-          <div className="tabular-nums group-hover:opacity-0 transition-opacity duration-200">
+          <div className="tabular-nums group-hover:opacity-0 transition-opacity duration-200 select-none">
             {line.number}
           </div>
           <div className="flex gap-1 opacity-0 absolute bg-secondary group-hover:opacity-100 transition-opacity duration-200">
