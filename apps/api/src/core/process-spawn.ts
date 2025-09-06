@@ -61,6 +61,7 @@ export class ProcessSpawn extends EventEmitter<{
         env: {
           ...process.env,
           ...this.processConfiguration.env,
+          FORCE_COLOR: "1",
         },
       },
     );
