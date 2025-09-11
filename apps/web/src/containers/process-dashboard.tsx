@@ -84,6 +84,11 @@ export const ProcessDashboard = () => {
       onToggleProcess(activeProcess);
     }
   });
+  useHotkeys("space", () => {
+    if (activeProcess) {
+      onToggleProcess(activeProcess);
+    }
+  });
   useHotkeys("c", () => {
     if (activeProcess) {
       onClearProcess(activeProcess);
