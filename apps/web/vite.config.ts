@@ -21,12 +21,10 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: `http://localhost:${env.BACKEND_PORT || 3001}`,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
         },
         "/api/ws": {
           target: `ws://localhost:${env.BACKEND_PORT || 3001}`,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
           ws: true,
         },
       },

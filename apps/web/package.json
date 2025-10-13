@@ -7,7 +7,7 @@
     "typecheck": "tsc --noEmit",
     "dev": "vite --host",
     "build": "vite build",
-    "start": "vite preview"
+    "serve": "vite preview"
   },
   "dependencies": {
     "@fusebox/api": "workspace:^",
