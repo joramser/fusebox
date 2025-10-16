@@ -11,9 +11,9 @@ const isServiceRunning = (port: number) => {
   }
 
   const waitForBrowser = new Promise((resolve) => {
-    browser?.on("up", (service) => {
+    browser.on("up", (service) => {
       if (service.name === "Fusebox" && service.port === port) {
-        browser?.stop();
+        browser.stop();
         return resolve(true);
       }
     });
@@ -29,12 +29,12 @@ const isServiceRunning = (port: number) => {
   return Promise.race([waitForBrowser, timeoutHandler]);
 };
 
-export const startLocalDomainService = (port: number) => {
+export const startLocalDomainService = async (port: number) => {
   try {
     if (!bonjourInstance) {
       bonjourInstance = new Bonjour();
     }
-    const isRunning = isServiceRunning(port);
+    const isRunning = await isServiceRunning(port);
 
     if (!isRunning && !serviceInstance) {
       serviceInstance = bonjourInstance.publish({
@@ -44,7 +44,7 @@ export const startLocalDomainService = (port: number) => {
         host: "fusebox.local",
       });
 
-      console.log(`📡 Bonjour service published: fusebox.local:${port}`);
+      console.log(`Local domain running at fusebox.local:${port}`);
     }
   } catch (error) {
     console.error("Failed to start Bonjour service:", error);
