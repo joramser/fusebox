@@ -38,6 +38,12 @@ export const stopProcess = (name: string) => {
 };
 
 export const clearProcessOutput = (name: string) => {
-  const process = processesOrchestrator.get(name);
-  process?.spawn.clearOutput();
+  try {
+    const process = processesOrchestrator.get(name);
+    process.spawn.clearOutput();
+  } catch (error) {
+    if (error instanceof NoProcessFoundError) {
+      throw new HTTPException(404, { message: error.message });
+    }
+  }
 };
