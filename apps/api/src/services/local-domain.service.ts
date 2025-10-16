@@ -3,24 +3,55 @@ import Bonjour, { type Service } from "bonjour-service";
 let bonjourInstance: Bonjour | null = null;
 let serviceInstance: Service | null = null;
 
-export function startLocalDomainService(port: number) {
-  try {
-    bonjourInstance = new Bonjour();
+const isServiceRunning = (port: number) => {
+  const browser = bonjourInstance?.find({ type: "http" });
 
-    serviceInstance = bonjourInstance.publish({
-      name: "Fusebox",
-      type: "http",
-      port: port,
-      host: "fusebox.local",
+  if (!browser) {
+    return false;
+  }
+
+  const waitForBrowser = new Promise((resolve) => {
+    browser?.on("up", (service) => {
+      if (service.name === "Fusebox" && service.port === port) {
+        browser?.stop();
+        return resolve(true);
+      }
     });
+  });
 
-    console.log(`📡 Bonjour service published: fusebox.local:${port}`);
+  const timeoutHandler = new Promise((resolve) => {
+    setTimeout(() => {
+      browser.stop();
+      return resolve(false);
+    }, 100);
+  });
+
+  return Promise.race([waitForBrowser, timeoutHandler]);
+};
+
+export const startLocalDomainService = (port: number) => {
+  try {
+    if (!bonjourInstance) {
+      bonjourInstance = new Bonjour();
+    }
+    const isRunning = isServiceRunning(port);
+
+    if (!isRunning && !serviceInstance) {
+      serviceInstance = bonjourInstance.publish({
+        name: "Fusebox",
+        type: "http",
+        port: port,
+        host: "fusebox.local",
+      });
+
+      console.log(`📡 Bonjour service published: fusebox.local:${port}`);
+    }
   } catch (error) {
     console.error("Failed to start Bonjour service:", error);
   }
-}
+};
 
-export function stopLocalDomainService() {
+export const stopLocalDomainService = () => {
   if (serviceInstance?.stop) {
     serviceInstance.stop();
     serviceInstance = null;
@@ -30,4 +61,4 @@ export function stopLocalDomainService() {
     bonjourInstance.destroy();
     bonjourInstance = null;
   }
-}
+};
