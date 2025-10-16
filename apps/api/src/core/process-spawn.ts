@@ -109,35 +109,21 @@ export class ProcessSpawn extends EventEmitter<{
       this.addLine(newLine);
     });
 
-    this.spawn.on("exit", (code, signal) => {
+    this.spawn.on("close", (code, signal) => {
       const newLine = {
         line: `Process closed${code ? ` with code ${code}` : ""}`,
         number: ++this.outputLinesCounter,
       };
 
-      this.status = "exited";
+      if (signal === "SIGTERM") {
+        this.status = "stopped";
+      } else if (code === 0) {
+        this.status = "exited";
+      } else {
+        this.status = "killed";
+      }
+
       this.addLine(newLine);
-
-      this.logger.info(
-        {
-          childPid: this.spawn?.pid,
-          code,
-          signal,
-        },
-        "Process exited",
-      );
-
-      this.emit("send", {
-        name: "v1.process-updated",
-        params: {
-          processName: this.name,
-          status: this.status,
-        },
-      });
-    });
-
-    this.spawn.on("close", (code, signal) => {
-      this.status = "killed";
 
       this.logger.info(
         {
@@ -175,7 +161,7 @@ export class ProcessSpawn extends EventEmitter<{
       throw new Error("Spawn process not started");
     }
 
-    this.spawn.kill();
+    this.spawn.kill("SIGTERM");
   }
 
   clearOutput() {

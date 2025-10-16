@@ -133,7 +133,7 @@ const StatusIndicator = ({ status }: { status: ProcessSchema["spawn"]["status"] 
     <div
       className={cn("h-2 w-2 rounded-full bg-muted-foreground shrink-0", {
         "bg-green-500": status === "running",
-        "bg-yellow-500": status === "exited",
+        "bg-yellow-500": status === "killed",
       })}
     />
   );

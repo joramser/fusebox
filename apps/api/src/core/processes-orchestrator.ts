@@ -43,12 +43,16 @@ class ProcessesOrchestrator {
   start(name: string) {
     const process = this.get(name);
 
-    if (process.spawn.status === "killed" || process.spawn.status === "exited") {
-      process.spawn = new ProcessSpawn(process);
-    }
-
     if (process.spawn.status === "running") {
       throw new ProcessAlreadyRunningError(`Process ${name} already running`);
+    }
+
+    if (
+      process.spawn.status === "killed" ||
+      process.spawn.status === "exited" ||
+      process.spawn.status === "stopped"
+    ) {
+      process.spawn = new ProcessSpawn(process);
     }
 
     process.spawn.start();

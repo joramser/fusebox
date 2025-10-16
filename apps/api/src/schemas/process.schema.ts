@@ -1,7 +1,13 @@
 import { z } from "zod";
 import { processConfigurationSchema } from "./process-configuration.schema";
 
-export const processStatusSchema = z.enum(["init", "running", "exited", "killed"]);
+export const processStatusSchema = z.enum([
+  "init", // Process is created by not running
+  "running", // Process is running
+  "exited", // Process exited normally without user intervention
+  "stopped", // Process was stopped by user
+  "killed", // Process was force stopped (non-zero exit code)
+]);
 
 export const processOutputSchema = z.object({
   number: z.number(),
