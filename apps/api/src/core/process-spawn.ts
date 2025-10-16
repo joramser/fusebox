@@ -9,6 +9,11 @@ import type { Logger } from "pino";
 export type ProcessSpawnSendEvent = LineCreatedEvent | ProcessUpdatedEvent | ProcessErrorEvent;
 
 /**
+ * Max number of lines per process output for extra measure.
+ */
+const MAX_OUTPUT_LINES = 100000;
+
+/**
  *
  */
 export class ProcessSpawn extends EventEmitter<{
@@ -20,6 +25,8 @@ export class ProcessSpawn extends EventEmitter<{
   public pid: number | undefined;
   public status: ProcessStatusSchema = "init";
   public output: ProcessOutputSchema[] = [];
+
+  private outputLinesCounter = 0;
 
   constructor(public processConfiguration: ProcessConfigurationSchema) {
     super();
@@ -36,6 +43,10 @@ export class ProcessSpawn extends EventEmitter<{
 
   addLine(line: ProcessOutputSchema) {
     this.output.push(line);
+
+    if (this.output.length > MAX_OUTPUT_LINES) {
+      this.output.shift();
+    }
 
     this.emit("send", {
       name: "v1.line-created",
@@ -86,7 +97,7 @@ export class ProcessSpawn extends EventEmitter<{
     this.spawn.stdout?.on("data", (data) => {
       const newLine = {
         line: data.toString(),
-        number: this.output.length + 1,
+        number: ++this.outputLinesCounter,
       };
 
       this.addLine(newLine);
@@ -95,7 +106,7 @@ export class ProcessSpawn extends EventEmitter<{
     this.spawn.stderr?.on("data", (data) => {
       const newLine = {
         line: data.toString(),
-        number: this.output.length + 1,
+        number: ++this.outputLinesCounter,
       };
 
       this.addLine(newLine);
@@ -104,7 +115,7 @@ export class ProcessSpawn extends EventEmitter<{
     this.spawn.on("exit", (code, signal) => {
       const newLine = {
         line: `Process closed${code ? ` with code ${code}` : ""}`,
-        number: this.output.length + 1,
+        number: ++this.outputLinesCounter,
       };
 
       this.status = "exited";
@@ -172,6 +183,7 @@ export class ProcessSpawn extends EventEmitter<{
 
   clearOutput() {
     this.output = [];
+    this.outputLinesCounter = 0;
     this.emit("send", {
       name: "v1.process-updated",
       params: {
