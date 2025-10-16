@@ -63,19 +63,16 @@ export class ProcessSpawn extends EventEmitter<{
       this.removeAllListeners();
     }
 
-    this.spawn = spawn(
-      this.processConfiguration.command,
-      this.processConfiguration.args.split(" "),
-      {
-        cwd: this.processConfiguration.cwd,
-        detached: false,
-        env: {
-          FORCE_COLOR: "1",
-          ...process.env,
-          ...this.processConfiguration.env,
-        },
+    this.spawn = spawn(`${this.processConfiguration.command} ${this.processConfiguration.args}`, {
+      cwd: this.processConfiguration.cwd,
+      detached: false,
+      shell: true,
+      env: {
+        FORCE_COLOR: "1",
+        ...process.env,
+        ...this.processConfiguration.env,
       },
-    );
+    });
 
     this.spawn.on("spawn", () => {
       this.logger.info({ childPid: this.spawn?.pid }, "Process started");
