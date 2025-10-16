@@ -11,7 +11,7 @@ export const startProcess = (name: string) => {
   try {
     const process = processesOrchestrator.start(name);
 
-    processWebSocketListenerManager.registerForAllWebSockets(process.spawn);
+    processWebSocketListenerManager.registerProcessSpawn(process.spawn);
   } catch (error) {
     if (error instanceof ProcessAlreadyRunningError) {
       throw new HTTPException(409, { message: error.message });

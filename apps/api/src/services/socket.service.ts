@@ -4,10 +4,10 @@ import type { ServerWebSocket } from "bun";
 
 export const openSocket = (socket: ServerWebSocket) => {
   socketManager.register(socket);
-  processWebSocketListenerManager.registerForAllSpawns(socket);
+  processWebSocketListenerManager.registerSocket(socket);
 };
 
 export const closeSocket = (socket: ServerWebSocket) => {
   socketManager.close(socket);
-  processWebSocketListenerManager.unregisterForAllSpawns(socket);
+  processWebSocketListenerManager.unregisterSocket(socket);
 };

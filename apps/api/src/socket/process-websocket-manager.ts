@@ -15,7 +15,7 @@ class ProcessWebSocketListenerManager {
     return Array.from(this.spawnListeners.values());
   }
 
-  registerForAllSpawns(socket: ServerWebSocket) {
+  registerSocket(socket: ServerWebSocket) {
     for (const process of processesOrchestrator
       .getAll()
       .filter((process) => process.spawn.status === "running")) {
@@ -30,26 +30,29 @@ class ProcessWebSocketListenerManager {
     });
   }
 
-  registerForAllWebSockets(spawn: ProcessSpawn) {
+  registerProcessSpawn(spawn: ProcessSpawn) {
     for (const socket of socketManager.getAll()) {
       this.registerSpawnListener(spawn, socket);
     }
   }
 
-  unregisterForAllSpawns(socket: ServerWebSocket) {
+  unregisterSocket(socket: ServerWebSocket) {
     for (const process of processesOrchestrator.getAll()) {
       this.unregisterSpawnListener(process.spawn, socket);
     }
   }
 
   private registerSpawnListener(spawn: ProcessSpawn, socket: ServerWebSocket) {
-    const listener = (event: ProcessSpawnSendEvent) => {
-      this.sendEvent(socket, event);
-    };
+    let listener = this.spawnListeners.get(socket);
+
+    if (!listener) {
+      listener = (event: ProcessSpawnSendEvent) => {
+        this.sendEvent(socket, event);
+      };
+      this.spawnListeners.set(socket, listener);
+    }
 
     spawn.on("send", listener);
-
-    this.spawnListeners.set(socket, listener);
   }
 
   private unregisterSpawnListener(spawn: ProcessSpawn, socket: ServerWebSocket) {

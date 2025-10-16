@@ -59,9 +59,9 @@ export class ProcessSpawn extends EventEmitter<{
         cwd: this.processConfiguration.cwd,
         detached: false,
         env: {
+          FORCE_COLOR: "1",
           ...process.env,
           ...this.processConfiguration.env,
-          FORCE_COLOR: "1",
         },
       },
     );
