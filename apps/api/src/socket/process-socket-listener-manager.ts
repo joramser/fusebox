@@ -7,7 +7,7 @@ import type { ServerWebSocket } from "bun";
 /**
  * Listens to events from spawned processes and sends them to the client over WebSocket
  */
-class ProcessWebSocketListenerManager {
+class ProcessSocketListenerManager {
   private spawnListeners = new Map<ServerWebSocket, (data: ProcessSpawnSendEvent) => void>();
 
   /** Only used by debug endpoint */
@@ -73,4 +73,4 @@ class ProcessWebSocketListenerManager {
   }
 }
 
-export const processWebSocketListenerManager = new ProcessWebSocketListenerManager();
+export const processSocketListenerManager = new ProcessSocketListenerManager();

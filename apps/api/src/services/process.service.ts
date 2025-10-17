@@ -3,7 +3,7 @@ import {
   ProcessAlreadyRunningError,
   processesOrchestrator,
 } from "@api/core/processes-orchestrator";
-import { processWebSocketListenerManager } from "@api/socket/process-websocket-manager";
+import { processSocketListenerManager } from "@api/socket/process-socket-listener-manager";
 
 import { HTTPException } from "hono/http-exception";
 
@@ -12,7 +12,7 @@ export const startProcess = (name: string) => {
     const process = processesOrchestrator.get(name);
 
     if (process.spawn.status === "init") {
-      processWebSocketListenerManager.registerProcessSpawn(process.spawn);
+      processSocketListenerManager.registerProcessSpawn(process.spawn);
     }
 
     processesOrchestrator.start(process);

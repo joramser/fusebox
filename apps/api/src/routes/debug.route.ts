@@ -1,6 +1,6 @@
 import { processesOrchestrator } from "@api/core/processes-orchestrator";
 
-import { processWebSocketListenerManager } from "@api/socket/process-websocket-manager";
+import { processSocketListenerManager } from "@api/socket/process-socket-listener-manager";
 import { socketManager } from "@api/socket/socket-manager";
 import { Hono } from "hono";
 
@@ -8,7 +8,7 @@ const debug = new Hono();
 
 debug.get("/", (ctx) => {
   const data = {
-    socketEvents: processWebSocketListenerManager.getAll().length,
+    socketListeners: processSocketListenerManager.getAll().length,
     spawnedProcesses: processesOrchestrator.getAll().length,
     sockets: socketManager.getAll().length,
   };

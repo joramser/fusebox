@@ -1,6 +1,6 @@
 import app from "@api/app";
 import { processesOrchestrator } from "@api/core/processes-orchestrator";
-import { websocket } from "@api/routes/web-socket.route";
+import { websocket } from "@api/routes/socket.route";
 import {
   startLocalDomainService,
   stopLocalDomainService,
@@ -28,5 +28,5 @@ process.on("SIGTERM", () => {
 export default {
   port: port,
   fetch: app.fetch,
-  websocket: websocket,
+  websocket,
 };
