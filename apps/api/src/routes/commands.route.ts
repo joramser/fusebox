@@ -9,10 +9,10 @@ const commands = new Hono()
 
     return ctx.json({ message: "Folder opened" }, 202);
   })
-  .post("/:name/open-ide", async (ctx) => {
+  .post("/:name/open-ide", (ctx) => {
     const { name } = ctx.req.param();
 
-    executeCwdCommand(name, "open");
+    executeCwdCommand(name, "code");
 
     return ctx.json({ message: "IDE opened" }, 202);
   });

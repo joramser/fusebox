@@ -58,7 +58,7 @@ export class ProcessSpawn extends EventEmitter<{
     });
   }
 
-  async start() {
+  start() {
     if (this.spawn) {
       this.spawn.removeAllListeners();
     }
@@ -156,7 +156,7 @@ export class ProcessSpawn extends EventEmitter<{
     });
   }
 
-  async stop() {
+  stop() {
     if (!this.spawn) {
       throw new Error("Spawn process not started");
     }

@@ -3,7 +3,7 @@ import Bonjour, { type Service } from "bonjour-service";
 let bonjourInstance: Bonjour | null = null;
 let serviceInstance: Service | null = null;
 
-const isServiceRunning = (port: number) => {
+const isServiceRunning = async (port: number) => {
   const browser = bonjourInstance?.find({ type: "http" });
 
   if (!browser) {
@@ -13,7 +13,6 @@ const isServiceRunning = (port: number) => {
   const waitForBrowser = new Promise((resolve) => {
     browser.on("up", (service) => {
       if (service.name === "Fusebox" && service.port === port) {
-        browser.stop();
         return resolve(true);
       }
     });
@@ -21,12 +20,15 @@ const isServiceRunning = (port: number) => {
 
   const timeoutHandler = new Promise((resolve) => {
     setTimeout(() => {
-      browser.stop();
       return resolve(false);
     }, 100);
   });
 
-  return Promise.race([waitForBrowser, timeoutHandler]);
+  const result = await Promise.race([waitForBrowser, timeoutHandler]);
+
+  browser.stop();
+
+  return result;
 };
 
 export const startLocalDomainService = async (port: number) => {

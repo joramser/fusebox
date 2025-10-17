@@ -8,7 +8,7 @@ import {
 
 const port = Number(process.env.BACKEND_PORT) || 3001;
 
-processesOrchestrator.init();
+await processesOrchestrator.init();
 startLocalDomainService(port);
 
 process.on("SIGINT", () => {

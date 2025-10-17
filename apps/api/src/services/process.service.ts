@@ -45,5 +45,7 @@ export const clearProcessOutput = (name: string) => {
     if (error instanceof NoProcessFoundError) {
       throw new HTTPException(404, { message: error.message });
     }
+
+    throw error;
   }
 };
