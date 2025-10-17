@@ -18,7 +18,7 @@ class ProcessWebSocketListenerManager {
   registerSocket(socket: ServerWebSocket) {
     for (const process of processesOrchestrator
       .getAll()
-      .filter((process) => process.spawn.status === "running")) {
+      .filter((process) => process.spawn.status !== "init")) {
       this.registerSpawnListener(process.spawn, socket);
     }
 

@@ -9,9 +9,13 @@ import { HTTPException } from "hono/http-exception";
 
 export const startProcess = (name: string) => {
   try {
-    const process = processesOrchestrator.start(name);
+    const process = processesOrchestrator.get(name);
 
-    processWebSocketListenerManager.registerProcessSpawn(process.spawn);
+    if (process.spawn.status === "init") {
+      processWebSocketListenerManager.registerProcessSpawn(process.spawn);
+    }
+
+    processesOrchestrator.start(process);
   } catch (error) {
     if (error instanceof ProcessAlreadyRunningError) {
       throw new HTTPException(409, { message: error.message });
@@ -27,7 +31,9 @@ export const startProcess = (name: string) => {
 
 export const stopProcess = (name: string) => {
   try {
-    processesOrchestrator.stop(name);
+    const process = processesOrchestrator.get(name);
+
+    processesOrchestrator.stop(process);
   } catch (error) {
     if (error instanceof NoProcessFoundError) {
       throw new HTTPException(404, { message: error.message });

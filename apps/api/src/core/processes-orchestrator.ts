@@ -40,20 +40,9 @@ class ProcessesOrchestrator {
     return Array.from(this.processes.values());
   }
 
-  start(name: string) {
-    const process = this.get(name);
-
+  start(process: RunningProcess) {
     if (process.spawn.status === "running") {
-      throw new ProcessAlreadyRunningError(`Process ${name} already running`);
-    }
-
-    if (
-      process.spawn.status === "killed" ||
-      process.spawn.status === "exited" ||
-      process.spawn.status === "stopped"
-    ) {
-      process.spawn.removeAllListeners();
-      process.spawn = new ProcessSpawn(process);
+      throw new ProcessAlreadyRunningError(`Process ${process.name} already running`);
     }
 
     process.spawn.start();
@@ -61,9 +50,7 @@ class ProcessesOrchestrator {
     return process;
   }
 
-  stop(name: string) {
-    const process = this.get(name);
-
+  stop(process: RunningProcess) {
     process.spawn.stop();
 
     return process;

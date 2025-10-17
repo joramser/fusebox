@@ -61,6 +61,7 @@ export class ProcessSpawn extends EventEmitter<{
   start() {
     if (this.spawn) {
       this.spawn.removeAllListeners();
+      this.clearOutput();
     }
 
     this.spawn = spawn(`${this.processConfiguration.command} ${this.processConfiguration.args}`, {
