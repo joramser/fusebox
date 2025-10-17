@@ -40,6 +40,7 @@ class ProcessWebSocketListenerManager {
     for (const process of processesOrchestrator.getAll()) {
       this.unregisterSpawnListener(process.spawn, socket);
     }
+    this.spawnListeners.delete(socket);
   }
 
   private registerSpawnListener(spawn: ProcessSpawn, socket: ServerWebSocket) {
@@ -63,8 +64,6 @@ class ProcessWebSocketListenerManager {
     }
 
     spawn.removeListener("send", listener);
-
-    this.spawnListeners.delete(socket);
   }
 
   private sendEvent(socket: ServerWebSocket, event: DownstreamEvent) {

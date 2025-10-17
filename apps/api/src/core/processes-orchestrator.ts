@@ -52,6 +52,7 @@ class ProcessesOrchestrator {
       process.spawn.status === "exited" ||
       process.spawn.status === "stopped"
     ) {
+      process.spawn.removeAllListeners();
       process.spawn = new ProcessSpawn(process);
     }
 
