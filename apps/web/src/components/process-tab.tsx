@@ -131,9 +131,9 @@ export const ProcessTab = ({
 const StatusIndicator = ({ status }: { status: ProcessSchema["spawn"]["status"] }) => {
   return (
     <div
-      className={cn("h-2 w-2 rounded-full bg-muted-foreground shrink-0", {
-        "bg-green-500": status === "running",
-        "bg-yellow-500": status === "killed",
+      className={cn("size-2 rounded-full bg-muted-foreground shrink-0", {
+        "bg-emerald-500": status === "running",
+        "bg-amber-500": status === "killed",
       })}
     />
   );

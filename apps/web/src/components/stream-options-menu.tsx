@@ -1,5 +1,7 @@
 import type { ProcessSchema } from "@fusebox/api/schemas/process.schema";
 import { CheckIcon, EraserIcon } from "@phosphor-icons/react";
+import { StatusBadge } from "@web/components/status-badge";
+import { Badge } from "@web/components/ui/badge";
 import { Button } from "@web/components/ui/button";
 import {
   Tooltip,
@@ -8,7 +10,6 @@ import {
   TooltipTrigger,
 } from "@web/components/ui/tooltip";
 import { useState } from "react";
-import { Badge } from "./ui/badge";
 
 export type StreamOptionsMenuProps = {
   process: ProcessSchema | undefined;
@@ -36,6 +37,7 @@ export const StreamOptionsMenu = ({ process, onClear }: StreamOptionsMenuProps) 
                 {">"} {process.command} {process.args}
               </span>
             </div>
+            <StatusBadge status={process.spawn.status} />
             {process.spawn.pid && process.spawn.status === "running" && (
               <Badge
                 variant="secondary"
