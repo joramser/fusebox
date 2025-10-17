@@ -4,7 +4,8 @@ import ReactDOM from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 
 import "@web/index.css";
-import { type ReactNode, useEffect } from "react";
+import type { DownstreamEvent } from "@fusebox/api/events";
+import { type ReactNode, useCallback, useEffect } from "react";
 import { ThemeProvider } from "./context/theme.context";
 import { useStoreActions } from "./store";
 import { downstreamEventMapper } from "./store/event-mapper";
@@ -41,14 +42,21 @@ if (rootElement && !rootElement.innerHTML) {
 }
 
 function EventsSubscriberProvider({ children }: { children: ReactNode }) {
-  const { subscribe } = useWebSocket();
+  const { subscribe, unsubscribe } = useWebSocket();
   const actions = useStoreActions();
 
-  useEffect(() => {
-    subscribe((message) => {
+  const callback = useCallback(
+    (message: DownstreamEvent) => {
       downstreamEventMapper(actions)(message);
-    });
-  }, [actions, subscribe]);
+    },
+    [actions],
+  );
+
+  useEffect(() => {
+    subscribe(callback);
+
+    return () => unsubscribe(callback);
+  }, [actions, subscribe, unsubscribe]);
 
   return children;
 }
