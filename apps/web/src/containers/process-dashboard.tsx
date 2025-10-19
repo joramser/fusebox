@@ -1,3 +1,4 @@
+import type { CommandSchema } from "@fusebox/api/events";
 import type { ProcessSchema } from "@fusebox/api/schemas/process.schema";
 import { PlusIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
 import { Outlet, useRouter } from "@tanstack/react-router";
@@ -19,7 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@web/components/ui/tooltip";
-import { apiClient, type Commands } from "@web/lib/rpc-client";
+import { useWebSocket } from "@web/context/websocket.context";
 import { useActiveProcess, useNextProcess, usePreviousProcess, useProcesses } from "@web/store";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -30,6 +31,7 @@ export type ProcessDashboardProps = {
 
 export const ProcessDashboard = () => {
   const router = useRouter();
+  const ws = useWebSocket();
 
   const processes = useProcesses();
 
@@ -49,34 +51,47 @@ export const ProcessDashboard = () => {
 
   const onToggleProcess = (process: ProcessSchema) => {
     if (process.spawn.status !== "running") {
-      apiClient.processes[":name"].start.$post({
-        param: {
-          name: process.name,
+      ws.emit({
+        name: "v1.start-process",
+        params: {
+          processName: process.name,
         },
       });
     } else {
-      apiClient.processes[":name"].stop.$post({
-        param: {
-          name: process.name,
+      ws.emit({
+        name: "v1.stop-process",
+        params: {
+          processName: process.name,
         },
       });
     }
   };
 
   const onClearProcess = (process: ProcessSchema) => {
-    apiClient.processes[":name"].clear.$post({
-      param: {
-        name: process.name,
+    ws.emit({
+      name: "v1.clear-process-output",
+      params: {
+        processName: process.name,
       },
     });
   };
 
-  const onProcessCommand = (command: Commands, process: ProcessSchema) => {
-    apiClient.commands[":name"][command].$post({
-      param: {
-        name: process.name,
-      },
-    });
+  const onProcessCommand = (command: CommandSchema, process: ProcessSchema) => {
+    if (command === "open-ide") {
+      ws.emit({
+        name: "v1.open-ide-command",
+        params: {
+          processName: process.name,
+        },
+      });
+    } else if (command === "open-folder") {
+      ws.emit({
+        name: "v1.open-folder-command",
+        params: {
+          processName: process.name,
+        },
+      });
+    }
   };
 
   useHotkeys("s", () => {

@@ -1,5 +1,6 @@
-import type { DownstreamEvent } from "@fusebox/api/events";
+import type { DownstreamEvent, UpstreamEvent } from "@fusebox/api/events";
 import { createContext, useContext, useEffect, useRef } from "react";
+import { toast } from "sonner";
 
 export type WebSocketSubscribeCallback = (event: DownstreamEvent) => void;
 
@@ -10,9 +11,11 @@ export type WebsocketProviderProps = {
 export const WebSocketContext = createContext<{
   subscribe: (callback: WebSocketSubscribeCallback) => void;
   unsubscribe: (callback: WebSocketSubscribeCallback) => void;
+  emit: (event: UpstreamEvent) => void;
 }>({
   subscribe: () => {},
   unsubscribe: () => {},
+  emit: () => {},
 });
 
 export const WebSocketProvider = ({ children }: WebsocketProviderProps) => {
@@ -25,6 +28,18 @@ export const WebSocketProvider = ({ children }: WebsocketProviderProps) => {
 
   const unsubscribe = (callback: WebSocketSubscribeCallback) => {
     subscribers.current.delete(callback);
+  };
+
+  const emit = (event: UpstreamEvent) => {
+    if (socketRef.current?.readyState !== WebSocket.OPEN) {
+      console.error("WebSocket is not connected");
+      toast.error("Connection error", {
+        description: "Cannot send message: WebSocket is not connected",
+      });
+      return;
+    }
+
+    socketRef.current.send(JSON.stringify(event));
   };
 
   useEffect(() => {
@@ -54,6 +69,7 @@ export const WebSocketProvider = ({ children }: WebsocketProviderProps) => {
       value={{
         subscribe,
         unsubscribe,
+        emit,
       }}
     >
       {children}

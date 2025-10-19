@@ -1,7 +1,5 @@
 import { pinoLogger } from "@api/middleware/logger-middleware";
-import { commands } from "@api/routes/commands.route";
 import { debug } from "@api/routes/debug.route";
-import { processes } from "@api/routes/processes.route";
 import { ws } from "@api/routes/socket.route";
 
 import { Hono } from "hono";
@@ -11,11 +9,7 @@ const app = new Hono();
 
 app.use(pinoLogger());
 
-const routes = app
-  .route("/api/ws", ws)
-  .route("/api/processes", processes)
-  .route("/api/commands", commands)
-  .route("/api/debug", debug);
+const routes = app.route("/api/ws", ws).route("/api/debug", debug);
 
 if (process.env.NODE_ENV === "production") {
   app.use("/assets/*", serveStatic({ root: "../web/dist" }));

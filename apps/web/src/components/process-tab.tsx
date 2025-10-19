@@ -1,3 +1,4 @@
+import type { CommandSchema } from "@fusebox/api/events";
 import type { ProcessSchema } from "@fusebox/api/schemas/process.schema";
 import { CodeIcon, FolderIcon } from "@phosphor-icons/react";
 import { OnOffSwitch } from "@web/components/on-off-switch";
@@ -8,7 +9,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@web/components/ui/tooltip";
-import type { Commands } from "@web/lib/rpc-client";
 import { cn } from "@web/lib/utils";
 import { useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -19,7 +19,7 @@ export type ProcessTabProps = {
   isSelected: boolean;
   onSelect: (process: ProcessSchema) => void;
   onToggle: (process: ProcessSchema) => void;
-  onCommand: (command: Commands, process: ProcessSchema) => void;
+  onCommand: (command: CommandSchema, process: ProcessSchema) => void;
 };
 
 export const ProcessTab = ({
