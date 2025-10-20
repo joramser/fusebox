@@ -30,7 +30,7 @@ export const upstreamEventMapper = (event: UpstreamEvent) => {
       break;
 
     default: {
-      throw new Error(`Unhandled event type: ${JSON.stringify(event)}`);
+      logger.error({ event }, `Unhandled event type`);
     }
   }
 };
