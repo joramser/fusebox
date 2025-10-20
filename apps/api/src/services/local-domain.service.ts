@@ -1,3 +1,4 @@
+import { logger } from "@api/lib/logger";
 import Bonjour, { type Service } from "bonjour-service";
 
 let bonjourInstance: Bonjour | null = null;
@@ -46,10 +47,13 @@ export const startLocalDomainService = async (port: number) => {
         host: "fusebox.local",
       });
 
-      console.log(`Local domain running at fusebox.local:${port}`);
+      logger.info({ port, host: "fusebox.local" }, "Local domain service started");
     }
   } catch (error) {
-    console.error("Failed to start Bonjour service:", error);
+    logger.error(
+      { error: error instanceof Error ? error.message : "Unknown error" },
+      "Failed to start local domain service"
+    );
   }
 };
 

@@ -11,9 +11,13 @@ export const loadUserProcesses = async () => {
   const json = await file.json();
 
   try {
-    return processesConfigurationSchema.parse(json);
+    const processes = processesConfigurationSchema.parse(json);
+
+    logger.info({ filePath: FILE_PATH, count: processes.length }, "Loaded process configurations");
+
+    return processes;
   } catch (error) {
-    logger.error(error);
+    logger.error(error, "Failed to load process configurations");
     return [];
   }
 };
